@@ -116,6 +116,9 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
 
     protected volatile int                             initialSize                               = DEFAULT_INITIAL_SIZE;
     protected volatile int                             maxActive                                 = DEFAULT_MAX_ACTIVE_SIZE;
+    /**
+     *
+     */
     protected volatile int                             minIdle                                   = DEFAULT_MIN_IDLE;
     protected volatile int                             maxIdle                                   = DEFAULT_MAX_IDLE;
     protected volatile long                            maxWait                                   = DEFAULT_MAX_WAIT;
@@ -146,6 +149,9 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
 
     protected long                                     createTimespan;
 
+    /**
+     *
+     */
     protected volatile int                             maxWaitThreadCount                        = -1;
     protected volatile boolean                         accessToUnderlyingConnectionAllowed       = true;
 
@@ -1264,6 +1270,7 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
     }
 
     public Driver getDriver() {
+        // TODO: 2020/10/14  
         return driver;
     }
 
@@ -1337,6 +1344,10 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
         return filters;
     }
 
+    /**
+     * filters属性配置
+     * @param filters
+     */
     public void setProxyFilters(List<Filter> filters) {
         if (filters != null) {
             this.filters.addAll(filters);
@@ -1354,6 +1365,11 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
         return classes.toArray(new String[classes.size()]);
     }
 
+    /**
+     * filters属性配置
+     * @param filters
+     * @throws SQLException
+     */
     public void setFilters(String filters) throws SQLException {
         if (filters != null && filters.startsWith("!")) {
             filters = filters.substring(1);
@@ -1651,6 +1667,7 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
         if (getProxyFilters().size() == 0) {
             conn = getDriver().connect(url, info);
         } else {
+            // 存在filter-chain 则用ConnectionProxyImpl代理具体数据库厂商连接
             conn = new FilterChainImpl(this).connection_connect(info);
         }
 
@@ -1715,6 +1732,7 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
         createStartNanosUpdater.set(this, connectStartNanos);
         creatingCountUpdater.incrementAndGet(this);
         try {
+            //创建连接
             conn = createPhysicalConnection(url, physicalConnectProperties);
             connectedNanos = System.nanoTime();
 
@@ -2164,6 +2182,9 @@ public abstract class DruidAbstractDataSource extends WrapperAdapter implements 
     }
 
     public static class PhysicalConnectionInfo {
+        /**
+         * 如果存在filter-chain则是ConnectionProxyImpl
+         */
         private Connection connection;
         private long connectStartNanos;
         private long connectedNanos;

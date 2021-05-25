@@ -231,6 +231,10 @@ public class DruidPooledConnection extends PoolableWrapper implements javax.sql.
         return disable;
     }
 
+    /**
+     * 从连接池获取连接后关闭连接 可以将连接放回连接池
+     * @throws SQLException
+     */
     @Override
     public void close() throws SQLException {
         if (this.disable) {
@@ -265,6 +269,7 @@ public class DruidPooledConnection extends PoolableWrapper implements javax.sql.
         List<Filter> filters = dataSource.getProxyFilters();
         if (filters.size() > 0) {
             FilterChainImpl filterChain = new FilterChainImpl(dataSource);
+            //可以将连接放回连接池
             filterChain.dataSource_recycle(this);
         } else {
             recycle();

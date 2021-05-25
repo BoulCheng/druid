@@ -153,6 +153,12 @@ public class FilterChainImpl implements FilterChain {
         Driver driver = dataSource.getRawDriver();
         String url = dataSource.getRawJdbcUrl();
 
+        /**
+         * 在其他连接池(非druid) 中配置
+         * 驱动driver为 DruidDriver
+         * 并且在jdbc-url中通过添加"jdbc:wrap-jdbc:"前缀配置filters
+         * 可以使用druid的filter-chain
+         */
         Connection nativeConnection = driver.connect(url, info);
 
         if (nativeConnection == null) {

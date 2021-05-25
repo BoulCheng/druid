@@ -37,6 +37,7 @@ public class FilterManager {
     private static final ConcurrentHashMap<String, String> aliasMap = new ConcurrentHashMap<String, String>(16, 0.75f, 1);
 
     static {
+        // Filter别名处理
         try {
             Properties filterProperties = loadFilterConfig();
             for (Map.Entry<Object, Object> entry : filterProperties.entrySet()) {
@@ -76,6 +77,12 @@ public class FilterManager {
         return filterProperties;
     }
 
+    /**
+     * 读取 META-INF/druid-filter.properties
+     * @param filterProperties
+     * @param classLoader
+     * @throws IOException
+     */
     private static void loadFilterConfig(Properties filterProperties, ClassLoader classLoader) throws IOException {
         if (classLoader == null) {
             return;

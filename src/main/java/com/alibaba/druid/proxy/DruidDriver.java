@@ -48,6 +48,13 @@ import com.alibaba.druid.util.JdbcUtils;
 import com.alibaba.druid.util.Utils;
 
 /**
+ * 在其他连接池(非druid) 中配置
+ * 驱动driver为 DruidDriver
+ * 并且在jdbc-url中通过添加"jdbc:wrap-jdbc:"前缀配置filters
+ * 可以使用druid的filter-chain
+ */
+
+/**
  * @author wenshao [szujobs@hotmail.com]
  */
 public class DruidDriver implements Driver, DruidDriverMBean {
@@ -89,6 +96,7 @@ public class DruidDriver implements Driver, DruidDriverMBean {
 
     public static boolean registerDriver(Driver driver) {
         try {
+            //DruidDriver 类初始化时向DriverManager注册DruidDriver实例
             DriverManager.registerDriver(driver);
 
             try {
@@ -146,6 +154,18 @@ public class DruidDriver implements Driver, DruidDriverMBean {
         return false;
     }
 
+    /**
+     *
+     * 在其他连接池(非druid) 中配置
+     * 驱动driver为 DruidDriver
+     * 并且在jdbc-url中通过添加"jdbc:wrap-jdbc:"前缀配置filters
+     * 可以使用druid的filter-chain
+     *
+     * @param url
+     * @param info
+     * @return
+     * @throws SQLException
+     */
     @Override
     public Connection connect(String url, Properties info) throws SQLException {
         if (!acceptsURL(url)) {
@@ -207,6 +227,7 @@ public class DruidDriver implements Driver, DruidDriverMBean {
     }
 
     public static DataSourceProxyConfig parseConfig(String url, Properties info) throws SQLException {
+        //
         String restUrl = url.substring(DEFAULT_PREFIX.length());
 
         DataSourceProxyConfig config = new DataSourceProxyConfig();

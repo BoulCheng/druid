@@ -108,6 +108,10 @@ public class ConnectionProxyImpl extends WrapperProxyImpl implements ConnectionP
         recycleFilterChain(chain);
     }
 
+    /**
+     * 真正关闭数据库物理连接
+     * @throws SQLException
+     */
     @Override
     public void close() throws SQLException {
         FilterChainImpl chain = createChain();
